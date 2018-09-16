@@ -19,8 +19,11 @@
   "homepage": "https://github.com/michaelcumings/liri-node-app#readme",
   "dependencies": {
     "dotenv": "^6.0.0",
+    "fs": "0.0.1-security",
     "moment": "^2.22.2",
     "node-spotify-api": "^1.0.7",
+    "query-string": "^6.1.0",
+    "querystring": "^0.2.0",
     "request": "^2.88.0"
   }
 }
