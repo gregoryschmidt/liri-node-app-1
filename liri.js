@@ -1,6 +1,6 @@
+require("dotenv").config();
 var request = require("request");
 var fs = require("fs");
-require("dotenv").config();
 var moment = require('moment');
 var keys = require("./keys")
 var Spotify = require('node-spotify-api');
@@ -16,8 +16,8 @@ var spotify = new Spotify({
     secret: keys.spotify.secret
   });
 
-console.log(keys.spotify.id);
-console.log(keys.spotify.secret);
+// console.log(keys.spotify.id);
+// console.log(keys.spotify.secret);
 
 function concert(input) {
     var url = "https://rest.bandsintown.com/artists/" + input + "/events?app_id=codingbootcamp";
@@ -56,13 +56,13 @@ function spotifyts(input) {
     if (!input) {
         input = "The Sign"
     }
-    spotify.search({ type: 'track', query: input}, function(err, data) {
-        if (err) {
-          return console.log('Error occurred: ' + err);
-        }
-      
+    spotify
+        .search({ type: 'track', query: input})
+        .then(function(response) {
+        var data = response;
+        // console.log(window);
         for (i=0; i < data.tracks.items.length; i++) {
-        // data.tracks.items.forEach(function(trk) {
+
             var display = [
                 "\nArtist: " + data.tracks.items[i].artists[0].name,
                 "Song Name: " + data.tracks.items[i].name,
@@ -71,7 +71,7 @@ function spotifyts(input) {
             ].join('\n');
      
             console.log(display);
-            // console.log(self.divider);
+
     
             fs.appendFile('log.txt', display + self.divider, function (err) {
                 if (err) throw err;
@@ -79,8 +79,13 @@ function spotifyts(input) {
                
             })
         }; 
-      console.log(data); 
-      });
+
+        })
+        .catch(function(err) {
+            console.log(err);
+        })
+      
+
 }
 
 function moviethis(input) {
@@ -135,6 +140,22 @@ function moviethis(input) {
 
 }
 
+function dwis() {
+    var array1 = fs.readFileSync('random.txt').toString().split(",");
+    task = array1[0];
+    input = array1[1];
+    switch (task) {
+        case `concert-this`:
+            concert(input);
+            break;
+        case `spotify-this-song`:
+            spotifyts(input);
+            break;
+        case `movie-this`:
+            moviethis(input);
+            break;
+    }
+    }      
 
 switch (task) {
     case `concert-this`:
@@ -147,14 +168,6 @@ switch (task) {
         moviethis(input);
         break;
     case `do-what-it-says`:
-        day = `do-what-it-says`;
+        dwis();
         break;
-    case 4:
-        day = "Thursday";
-        break;
-    case 5:
-        day = "Friday";
-        break;
-    case 6:
-        day = "Saturday";
 }
